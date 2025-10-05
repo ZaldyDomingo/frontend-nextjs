@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "../lib/auth";
 import { useRouter } from "next/navigation";
 import { CircularProgress, Box, Container } from "@mui/material";
 import { useEffect } from "react";

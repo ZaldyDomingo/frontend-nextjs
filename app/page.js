@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "../lib/auth";
 import { useRouter } from "next/navigation";
 import {
   Container,

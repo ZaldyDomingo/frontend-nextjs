@@ -1,5 +1,5 @@
-import AuthGuard from "@/components/AuthGuard";
-import PostsList from "@/components/PostsList";
+import AuthGuard from "../../components/AuthGuard";
+import PostsList from "../../components/PostsList";
 
 export default function PostsPage() {
   return (
@@ -8,6 +8,3 @@ export default function PostsPage() {
     </AuthGuard>
   );
 }
-import { useState, useEffect } from "react";
-import { apiService } from "@/lib/api";
-import { useRouter } from "next/navigation";

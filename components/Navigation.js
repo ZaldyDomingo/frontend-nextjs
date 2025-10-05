@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "../lib/auth";
 import {
   AppBar,
   Toolbar,
@@ -17,6 +17,7 @@ export default function Navigation() {
 
   const handleLogout = () => {
     logout();
+    router.push("/");
   };
 
   return (
@@ -65,7 +66,7 @@ export default function Navigation() {
                   startIcon={<ExitToApp />}
                   onClick={handleLogout}
                 >
-                  Logout ({user.name})
+                  Logout ({user.name || user.email}) {/* Fallback to email */}
                 </Button>
               </>
             ) : (
