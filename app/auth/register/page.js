@@ -12,6 +12,7 @@ import {
   Alert,
   Link,
 } from "@mui/material";
+import { PersonAdd } from "@mui/icons-material";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -36,8 +37,14 @@ export default function Register() {
     e.preventDefault();
     setError("");
 
+    // Validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
       return;
     }
 
@@ -49,7 +56,7 @@ export default function Register() {
     });
 
     if (result.success) {
-      router.push("/auth/login");
+      router.push("/");
     } else {
       setError(result.error);
     }
@@ -67,8 +74,25 @@ export default function Register() {
         }}
       >
         <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
-            Register
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            mb={2}
+          >
+            <PersonAdd sx={{ mr: 1 }} />
+            <Typography component="h1" variant="h4" align="center">
+              Register
+            </Typography>
+          </Box>
+
+          <Typography
+            variant="body2"
+            align="center"
+            color="text.secondary"
+            mb={3}
+          >
+            Create your SocialOwl Blog account
           </Typography>
 
           {error && (
@@ -98,6 +122,7 @@ export default function Register() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              type="email"
               value={formData.email}
               onChange={handleChange}
             />
@@ -112,6 +137,7 @@ export default function Register() {
               autoComplete="new-password"
               value={formData.password}
               onChange={handleChange}
+              helperText="Minimum 6 characters"
             />
             <TextField
               margin="normal"
@@ -128,13 +154,22 @@ export default function Register() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, py: 1.5 }}
               disabled={loading}
+              size="large"
             >
-              {loading ? "Registering..." : "Register"}
+              {loading ? "Creating Account..." : "Create Account"}
             </Button>
             <Box textAlign="center">
-              <Link href="/auth/login" variant="body2">
+              <Link
+                href="/auth/login"
+                variant="body2"
+                sx={{ cursor: "pointer" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/auth/login");
+                }}
+              >
                 Already have an account? Sign in
               </Link>
             </Box>

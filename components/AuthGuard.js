@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { CircularProgress, Box } from "@mui/material";
+import { CircularProgress, Box, Container } from "@mui/material";
 import { useEffect } from "react";
 
 export default function AuthGuard({ children }) {
@@ -16,14 +16,16 @@ export default function AuthGuard({ children }) {
 
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <CircularProgress />
-      </Box>
+      <Container maxWidth="sm">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="60vh"
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
     );
   }
 

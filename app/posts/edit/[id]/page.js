@@ -2,36 +2,31 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
-import CategoryForm from "@/components/CategoryForm";
+import PostForm from "@/components/PostForm";
 import { apiService } from "@/lib/api";
 import { Container, CircularProgress, Box, Alert, Button } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
-export default function EditCategory() {
+export default function EditPost() {
   const params = useParams();
   const router = useRouter();
-  const [category, setCategory] = useState(null);
+  const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    loadCategory();
+    if (params.id) {
+      loadPost();
+    }
   }, [params.id]);
 
-  const loadCategory = async () => {
+  const loadPost = async () => {
     try {
-      const categories = await apiService.getCategories();
-      const foundCategory = categories.find(
-        (cat) => cat.id === parseInt(params.id)
-      );
-      if (foundCategory) {
-        setCategory(foundCategory);
-      } else {
-        setError("Category not found");
-      }
+      const data = await apiService.getPost(params.id);
+      setPost(data);
+      setError("");
     } catch (err) {
-      setError("Failed to load category: " + err.message);
+      setError("Failed to load post: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -61,9 +56,9 @@ export default function EditCategory() {
             <Button
               color="inherit"
               size="small"
-              onClick={() => router.push("/categories")}
+              onClick={() => router.push("/posts")}
             >
-              Back to Categories
+              Back to Posts
             </Button>
           }
         >
@@ -75,7 +70,7 @@ export default function EditCategory() {
 
   return (
     <AuthGuard>
-      <CategoryForm category={category} />
+      <PostForm post={post} />
     </AuthGuard>
   );
 }

@@ -17,8 +17,14 @@ import {
   IconButton,
   Alert,
   CircularProgress,
+  Chip,
 } from "@mui/material";
-import { Add, Edit, Delete } from "@mui/icons-material";
+import {
+  Add,
+  Edit,
+  Delete,
+  Category as CategoryIcon,
+} from "@mui/icons-material";
 
 export default function CategoriesList() {
   const [categories, setCategories] = useState([]);
@@ -34,34 +40,38 @@ export default function CategoriesList() {
     try {
       const data = await apiService.getCategories();
       setCategories(data);
+      setError("");
     } catch (err) {
-      setError("Failed to load categories");
+      setError("Failed to load categories: " + err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this category?")) return;
+  const handleDelete = async (id, name) => {
+    if (!confirm(`Are you sure you want to delete category "${name}"?`)) return;
 
     try {
       await apiService.deleteCategory(id);
       setCategories(categories.filter((cat) => cat.id !== id));
+      setError("");
     } catch (err) {
-      setError("Failed to delete category");
+      setError("Failed to delete category: " + err.message);
     }
   };
 
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="50vh"
-      >
-        <CircularProgress />
-      </Box>
+      <Container maxWidth="lg">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="50vh"
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
     );
   }
 
@@ -73,18 +83,24 @@ export default function CategoriesList() {
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4">Categories</Typography>
+        <Box display="flex" alignItems="center">
+          <CategoryIcon sx={{ mr: 1, fontSize: 32 }} color="primary" />
+          <Typography variant="h4" component="h1">
+            Categories
+          </Typography>
+        </Box>
         <Button
           variant="contained"
           startIcon={<Add />}
           onClick={() => router.push("/categories/create")}
+          size="large"
         >
           Add Category
         </Button>
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>
           {error}
         </Alert>
       )}
@@ -93,19 +109,43 @@ export default function CategoriesList() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Created At</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>
+                <strong>ID</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Name</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Created At</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Actions</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {categories.map((category) => (
-              <TableRow key={category.id}>
-                <TableCell>{category.id}</TableCell>
-                <TableCell>{category.name}</TableCell>
+              <TableRow
+                key={category.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                hover
+              >
                 <TableCell>
-                  {new Date(category.createdAt).toLocaleDateString()}
+                  <Chip label={category.id} size="small" variant="outlined" />
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body1" fontWeight="medium">
+                    {category.name}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  {new Date(category.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </TableCell>
                 <TableCell>
                   <IconButton
@@ -113,12 +153,14 @@ export default function CategoriesList() {
                     onClick={() =>
                       router.push(`/categories/edit/${category.id}`)
                     }
+                    title="Edit category"
                   >
                     <Edit />
                   </IconButton>
                   <IconButton
                     color="error"
-                    onClick={() => handleDelete(category.id)}
+                    onClick={() => handleDelete(category.id, category.name)}
+                    title="Delete category"
                   >
                     <Delete />
                   </IconButton>
@@ -130,9 +172,22 @@ export default function CategoriesList() {
       </TableContainer>
 
       {categories.length === 0 && !loading && (
-        <Typography variant="body1" align="center" sx={{ mt: 4 }}>
-          No categories found. Create your first category!
-        </Typography>
+        <Paper sx={{ p: 4, textAlign: "center", mt: 2 }}>
+          <CategoryIcon sx={{ fontSize: 48, color: "text.secondary", mb: 2 }} />
+          <Typography variant="h6" gutterBottom>
+            No Categories Found
+          </Typography>
+          <Typography variant="body2" color="text.secondary" paragraph>
+            Get started by creating your first category to organize your posts.
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => router.push("/categories/create")}
+          >
+            Create First Category
+          </Button>
+        </Paper>
       )}
     </Container>
   );

@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
             <CssBaseline />
             <AuthProvider>
               <Navigation />
-              {children}
+              <main>{children}</main>
             </AuthProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

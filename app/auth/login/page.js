@@ -12,8 +12,9 @@ import {
   Alert,
   Link,
 } from "@mui/material";
+import { Login } from "@mui/icons-material";
 
-export default function Login() {
+export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -38,7 +39,7 @@ export default function Login() {
     const result = await login(formData.email, formData.password);
 
     if (result.success) {
-      router.push("/posts");
+      router.push("/");
     } else {
       setError(result.error);
     }
@@ -56,8 +57,25 @@ export default function Login() {
         }}
       >
         <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
-            Sign In
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            mb={2}
+          >
+            <Login sx={{ mr: 1 }} />
+            <Typography component="h1" variant="h4" align="center">
+              Sign In
+            </Typography>
+          </Box>
+
+          <Typography
+            variant="body2"
+            align="center"
+            color="text.secondary"
+            mb={3}
+          >
+            Welcome back to SocialOwl Blog
           </Typography>
 
           {error && (
@@ -76,6 +94,7 @@ export default function Login() {
               name="email"
               autoComplete="email"
               autoFocus
+              type="email"
               value={formData.email}
               onChange={handleChange}
             />
@@ -95,14 +114,23 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, py: 1.5 }}
               disabled={loading}
+              size="large"
             >
               {loading ? "Signing In..." : "Sign In"}
             </Button>
             <Box textAlign="center">
-              <Link href="/auth/register" variant="body2">
-                {"Don't have an account? Register"}
+              <Link
+                href="/auth/register"
+                variant="body2"
+                sx={{ cursor: "pointer" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/auth/register");
+                }}
+              >
+                Don&apos;t have an account? Register
               </Link>
             </Box>
           </Box>

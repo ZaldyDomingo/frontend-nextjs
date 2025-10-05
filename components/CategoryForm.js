@@ -10,7 +10,10 @@ import {
   Typography,
   Paper,
   Alert,
+  Breadcrumbs,
+  Link,
 } from "@mui/material";
+import { Home, Category, ArrowBack } from "@mui/icons-material";
 
 export default function CategoryForm({ category = null }) {
   const [formData, setFormData] = useState({
@@ -47,19 +50,49 @@ export default function CategoryForm({ category = null }) {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
+      {/* Breadcrumbs */}
+      <Box sx={{ mt: 3, mb: 2 }}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link
+            color="inherit"
+            onClick={() => router.push("/")}
+            sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          >
+            <Home sx={{ mr: 0.5 }} fontSize="inherit" />
+            Home
+          </Link>
+          <Link
+            color="inherit"
+            onClick={() => router.push("/categories")}
+            sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          >
+            <Category sx={{ mr: 0.5 }} fontSize="inherit" />
+            Categories
+          </Link>
+          <Typography color="text.primary">
+            {category ? "Edit Category" : "Create Category"}
+          </Typography>
+        </Breadcrumbs>
+      </Box>
+
       <Box
         sx={{
-          marginTop: 4,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
-            {category ? "Edit Category" : "Create Category"}
-          </Typography>
+        <Paper elevation={3} sx={{ p: 4, width: "100%", mt: 2 }}>
+          <Box display="flex" alignItems="center" mb={3}>
+            <ArrowBack
+              sx={{ mr: 1, cursor: "pointer" }}
+              onClick={() => router.push("/categories")}
+            />
+            <Typography component="h1" variant="h4">
+              {category ? "Edit Category" : "Create New Category"}
+            </Typography>
+          </Box>
 
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
@@ -79,20 +112,23 @@ export default function CategoryForm({ category = null }) {
               autoFocus
               value={formData.name}
               onChange={handleChange}
+              placeholder="Enter category name (e.g., Technology, Lifestyle, Business)"
+              helperText="Choose a unique and descriptive name for your category"
             />
             <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
               <Button
                 type="submit"
-                fullWidth
                 variant="contained"
                 disabled={loading}
+                size="large"
+                sx={{ minWidth: 120 }}
               >
                 {loading ? "Saving..." : category ? "Update" : "Create"}
               </Button>
               <Button
-                fullWidth
                 variant="outlined"
                 onClick={() => router.push("/categories")}
+                size="large"
               >
                 Cancel
               </Button>

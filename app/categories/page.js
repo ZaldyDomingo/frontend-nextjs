@@ -1,10 +1,10 @@
 import AuthGuard from "@/components/AuthGuard";
-import PostsList from "@/components/PostsList";
+import CategoriesList from "@/components/CategoriesList";
 
-export default function PostsPage() {
+export default function CategoriesPage() {
   return (
     <AuthGuard>
-      <PostsList />
+      <CategoriesList />
     </AuthGuard>
   );
 }
