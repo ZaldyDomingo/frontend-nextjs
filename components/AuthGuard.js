@@ -28,6 +28,5 @@ export default function AuthGuard({ children }) {
       </Container>
     );
   }
-
   return user ? children : null;
 }
